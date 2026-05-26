@@ -7,8 +7,21 @@ public final class DriverValidator {
     }
 
     public static boolean isValidDriverID(String driverID) {
-        // Nathaniel TODO D1: implement driverID validation.
-        return false;
+        if (driverID == null || driverID.length() != 10) {
+            return false;
+        }
+
+        String firstTwoCharacters = driverID.substring(0, 2);
+        String middleCharacters = driverID.substring(2, 8);
+        String lastTwoCharacters = driverID.substring(8, 10);
+
+        long specialCharacterCount = middleCharacters.chars()
+                .filter(character -> isSpecialCharacter((char) character))
+                .count();
+
+        return firstTwoCharacters.matches("[2-9]{2}")
+                && specialCharacterCount >= 2
+                && lastTwoCharacters.matches("[A-Z]{2}");
     }
 
     public static boolean isUniqueDriverID(String driverID, Collection<Driver> existingDrivers) {
@@ -34,5 +47,9 @@ public final class DriverValidator {
     public static boolean canUpdateDriver(Driver currentDriver, Driver updatedDriver) {
         // Patrick TODO D4-D5: implement update restrictions.
         return false;
+    }
+
+    private static boolean isSpecialCharacter(char character) {
+        return !Character.isLetterOrDigit(character) && !Character.isWhitespace(character);
     }
 }

@@ -1,13 +1,48 @@
 package au.edu.scc.busguidance;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class DriverUnitTest {
     @Test
-    @Disabled("Nathaniel and Patrick: replace this placeholder with at least 15 real driver unit tests for D1-D5.")
-    void driverUnitTestsPlaceholder() {
-        // Nathaniel: write D1-D3 tests for driver ID, address, and birthdate.
-        // Patrick: write D4-D5 tests for licence update restrictions and immutable fields.
+    void validDriverIdIsAccepted() {
+        assertTrue(DriverValidator.isValidDriverID("23@@abCDXY"));
+    }
+
+    @Test
+    void driverIdShorterThanTenCharactersIsRejected() {
+        assertFalse(DriverValidator.isValidDriverID("23@@abCXY"));
+    }
+
+    @Test
+    void driverIdLongerThanTenCharactersIsRejected() {
+        assertFalse(DriverValidator.isValidDriverID("23@@abCDXYZ"));
+    }
+
+    @Test
+    void driverIdWithFirstDigitBelowTwoIsRejected() {
+        assertFalse(DriverValidator.isValidDriverID("13@@abCDXY"));
+    }
+
+    @Test
+    void driverIdWithZeroInFirstTwoDigitsIsRejected() {
+        assertFalse(DriverValidator.isValidDriverID("20@@abCDXY"));
+    }
+
+    @Test
+    void driverIdWithoutTwoSpecialCharactersInMiddleIsRejected() {
+        assertFalse(DriverValidator.isValidDriverID("23@aabCDXY"));
+    }
+
+    @Test
+    void driverIdWithWhitespaceAsSpecialCharacterIsRejected() {
+        assertFalse(DriverValidator.isValidDriverID("23@ abCDXY"));
+    }
+
+    @Test
+    void driverIdWithoutUppercaseFinalLettersIsRejected() {
+        assertFalse(DriverValidator.isValidDriverID("23@@abCDxy"));
     }
 }
