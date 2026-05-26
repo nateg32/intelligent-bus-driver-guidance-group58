@@ -1,6 +1,7 @@
 package au.edu.scc.busguidance;
 
 import java.util.Collection;
+import java.util.Objects;
 
 public final class DriverValidator {
     private DriverValidator() {
@@ -25,8 +26,13 @@ public final class DriverValidator {
     }
 
     public static boolean isUniqueDriverID(String driverID, Collection<Driver> existingDrivers) {
-        // Nathaniel TODO D1: reject duplicate driver IDs.
-        return false;
+        if (driverID == null || existingDrivers == null) {
+            return false;
+        }
+
+        return existingDrivers.stream()
+                .filter(Objects::nonNull)
+                .noneMatch(driver -> driverID.equals(driver.getDriverID()));
     }
 
     public static boolean isValidAddress(String address) {
