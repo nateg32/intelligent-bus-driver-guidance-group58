@@ -72,14 +72,39 @@ public final class DriverValidator {
         }
     }
 
-    public static boolean isValidDriver(Driver driver) {
-        // Nathaniel/Patrick TODO: combine all driver validation rules.
+    public static boolean isValidDriver(Driver driver) {  
+        if (driver == null) {
         return false;
+        }
+    
+        return isValidDriverID(driver.getDriverID())
+            && isValidAddress(driver.getAddress())
+            && isValidBirthdate(driver.getBirthdate());
     }
 
     public static boolean canUpdateDriver(Driver currentDriver, Driver updatedDriver) {
-        // Patrick TODO D4-D5: implement update restrictions.
-        return false;
+        if (currentDriver == null || updatedDriver == null) {
+            return false;
+        }
+
+        // D5 Rule: driverID and name must be immutable (cannot change)
+        if (!currentDriver.getDriverID().equals(updatedDriver.getDriverID())) {
+            return false;
+        }
+        if (!currentDriver.getName().equals(updatedDriver.getName())) {
+            return false;
+        }
+
+        // D4 Rule: If experience is > 10, the license type cannot change
+        if (currentDriver.getExperienceYears() > 10) {
+            if (!currentDriver.getLicenseType().equals(updatedDriver.getLicenseType())) {
+                return false;
+            }
+        }
+
+        // Pass the updated fields through format validations
+        return isValidAddress(updatedDriver.getAddress())
+                && isValidBirthdate(updatedDriver.getBirthdate());
     }
 
     private static boolean isSpecialCharacter(char character) {

@@ -38,18 +38,29 @@ public class DriverRepository {
             return Optional.empty();
         }
         
-        String[] tokens = line.split("\\|", 6);
+        // Split globally without a limit to capture every single pipe segment
+        String[] tokens = line.split("\\|");
         if (tokens.length < 6) return Optional.empty();
 
-        // Instantiates the record using the team's parameterized constructor
-        Driver driver = new Driver(
-            tokens[0].trim(),
-            tokens[1].trim(),
-            Integer.parseInt(tokens[2].trim()),
-            tokens[3].trim(),
-            tokens[4].trim(),
-            tokens[5].trim()
-        );
+        String id = tokens[0].trim();
+        String name = tokens[1].trim();
+        int experience = Integer.parseInt(tokens[2].trim());
+        String license = tokens[3].trim();
+        
+        // The last element is always the birthdate
+        String birthdate = tokens[tokens.length - 1].trim();
+        
+        // Rebuild the 5-part address from all the internal tokens in the middle
+        StringBuilder addressBuilder = new StringBuilder();
+        for (int i = 4; i < tokens.length - 1; i++) {
+            addressBuilder.append(tokens[i].trim());
+            if (i < tokens.length - 2) {
+                addressBuilder.append("|");
+            }
+        }
+        String address = addressBuilder.toString();
+
+        Driver driver = new Driver(id, name, experience, license, address, birthdate);
         return Optional.of(driver);
     }
 
@@ -89,13 +100,11 @@ public class DriverRepository {
     public boolean add(Driver driver) {
         if (driver == null || driver.getDriverID() == null) return false;
         
-        // Verifies the field validations match the DriverValidator criteria
         if (!DriverValidator.isValidDriver(driver)) {
             return false;
         }
 
         List<Driver> drivers = getAllDrivers();
-        // Uses the team's custom verification rule for ID uniqueness
         if (!DriverValidator.isUniqueDriverID(driver.getDriverID(), drivers)) {
             return false;
         }
@@ -136,7 +145,6 @@ public class DriverRepository {
             return false;
         }
 
-        // Delegates the update constraint assertions to the completed canUpdateDriver method
         if (!DriverValidator.canUpdateDriver(existingDriver, updatedDriver)) {
             return false;
         }
@@ -150,4 +158,7 @@ public class DriverRepository {
         return getAllDrivers().size();
     }
 
+    public Path getFilePath() {
+        return filePath;
+    }
 }

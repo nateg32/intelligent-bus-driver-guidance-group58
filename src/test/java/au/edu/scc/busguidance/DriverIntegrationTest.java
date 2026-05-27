@@ -77,6 +77,7 @@ class DriverIntegrationTest {
         Optional<Driver> freshlyRetrieved = repo.retrieve("34@@@@@@AB");
         assertTrue(freshlyRetrieved.isPresent());
         assertEquals(9, freshlyRetrieved.get().getExperienceYears(), "Updated experience should be permanently saved.");
+        
         assertEquals("999|FlindersSt|Melbourne|VIC|Australia", freshlyRetrieved.get().getAddress(), "Updated address should be permanently saved.");
     }
 
