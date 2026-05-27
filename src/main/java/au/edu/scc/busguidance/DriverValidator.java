@@ -36,8 +36,20 @@ public final class DriverValidator {
     }
 
     public static boolean isValidAddress(String address) {
-        // Nathaniel TODO D2: implement Street Number|Street Name|Suburb|State|Country validation.
-        return false;
+        if (address == null || address.contains(";")) {
+            return false;
+        }
+
+        String[] addressParts = address.split("\\|", -1);
+        if (addressParts.length != 5) {
+            return false;
+        }
+
+        return addressParts[0].matches("\\d+")
+                && isPresent(addressParts[1])
+                && isPresent(addressParts[2])
+                && isPresent(addressParts[3])
+                && isPresent(addressParts[4]);
     }
 
     public static boolean isValidBirthdate(String birthdate) {
@@ -57,5 +69,9 @@ public final class DriverValidator {
 
     private static boolean isSpecialCharacter(char character) {
         return !Character.isLetterOrDigit(character) && !Character.isWhitespace(character);
+    }
+
+    private static boolean isPresent(String value) {
+        return value != null && !value.trim().isEmpty();
     }
 }

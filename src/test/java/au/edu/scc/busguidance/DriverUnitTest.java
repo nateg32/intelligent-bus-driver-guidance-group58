@@ -74,6 +74,36 @@ class DriverUnitTest {
         assertFalse(DriverValidator.isUniqueDriverID("23@@abCDXY", null));
     }
 
+    @Test
+    void validAddressIsAccepted() {
+        assertTrue(DriverValidator.isValidAddress("12|King Street|Melbourne|VIC|Australia"));
+    }
+
+    @Test
+    void addressMissingFieldIsRejected() {
+        assertFalse(DriverValidator.isValidAddress("12|King Street|Melbourne|VIC"));
+    }
+
+    @Test
+    void addressUsingWrongSeparatorIsRejected() {
+        assertFalse(DriverValidator.isValidAddress("12,King Street,Melbourne,VIC,Australia"));
+    }
+
+    @Test
+    void addressWithBlankFieldIsRejected() {
+        assertFalse(DriverValidator.isValidAddress("12||Melbourne|VIC|Australia"));
+    }
+
+    @Test
+    void addressWithNonNumericStreetNumberIsRejected() {
+        assertFalse(DriverValidator.isValidAddress("Twelve|King Street|Melbourne|VIC|Australia"));
+    }
+
+    @Test
+    void addressContainingSemicolonIsRejected() {
+        assertFalse(DriverValidator.isValidAddress("12|King Street|Melbourne|VIC|Australia;"));
+    }
+
     private Driver driver(String driverID) {
         return new Driver(
                 driverID,
