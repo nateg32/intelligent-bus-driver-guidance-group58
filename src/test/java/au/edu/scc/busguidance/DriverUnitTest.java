@@ -104,6 +104,41 @@ class DriverUnitTest {
         assertFalse(DriverValidator.isValidAddress("12|King Street|Melbourne|VIC|Australia;"));
     }
 
+    @Test
+    void validBirthdateIsAccepted() {
+        assertTrue(DriverValidator.isValidBirthdate("15-04-1999"));
+    }
+
+    @Test
+    void birthdateUsingWrongFormatIsRejected() {
+        assertFalse(DriverValidator.isValidBirthdate("1999-04-15"));
+    }
+
+    @Test
+    void impossibleBirthdateIsRejected() {
+        assertFalse(DriverValidator.isValidBirthdate("31-02-1999"));
+    }
+
+    @Test
+    void birthdateWithInvalidMonthIsRejected() {
+        assertFalse(DriverValidator.isValidBirthdate("15-13-1999"));
+    }
+
+    @Test
+    void leapYearBirthdateIsAccepted() {
+        assertTrue(DriverValidator.isValidBirthdate("29-02-2000"));
+    }
+
+    @Test
+    void nonLeapYearFebruaryTwentyNinthIsRejected() {
+        assertFalse(DriverValidator.isValidBirthdate("29-02-2001"));
+    }
+
+    @Test
+    void birthdateWithSingleDigitDayIsRejected() {
+        assertFalse(DriverValidator.isValidBirthdate("5-04-1999"));
+    }
+
     private Driver driver(String driverID) {
         return new Driver(
                 driverID,

@@ -1,9 +1,16 @@
 package au.edu.scc.busguidance;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
 import java.util.Collection;
 import java.util.Objects;
 
 public final class DriverValidator {
+    private static final DateTimeFormatter BIRTHDATE_FORMATTER = DateTimeFormatter.ofPattern("dd-MM-uuuu")
+            .withResolverStyle(ResolverStyle.STRICT);
+
     private DriverValidator() {
     }
 
@@ -53,8 +60,16 @@ public final class DriverValidator {
     }
 
     public static boolean isValidBirthdate(String birthdate) {
-        // Nathaniel TODO D3: implement DD-MM-YYYY validation.
-        return false;
+        if (birthdate == null) {
+            return false;
+        }
+
+        try {
+            LocalDate.parse(birthdate, BIRTHDATE_FORMATTER);
+            return true;
+        } catch (DateTimeParseException exception) {
+            return false;
+        }
     }
 
     public static boolean isValidDriver(Driver driver) {
