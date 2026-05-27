@@ -30,8 +30,8 @@ class DriverIntegrationTest {
             name, 
             exp, 
             license, 
-            "123|Swanston St|Melbourne|VIC|Australia", // Valid D2 address format
-            "25-12-1990"                                // Valid D3 birthdate format
+            "123|SwanstonSt|Melbourne|VIC|Australia",
+            "25-12-1990"
         );
     }
 
@@ -71,7 +71,7 @@ class DriverIntegrationTest {
             "Patrick Nguyen", 
             9, 
             "Light", 
-            "999|Flinders St|Melbourne|VIC|Australia", 
+            "999|FlindersSt|Melbourne|VIC|Australia", 
             "25-12-1990"
         );
 
@@ -82,7 +82,7 @@ class DriverIntegrationTest {
         Optional<Driver> freshlyRetrieved = repo.retrieve("34#$FFGGAB");
         assertTrue(freshlyRetrieved.isPresent());
         assertEquals(9, freshlyRetrieved.get().getExperienceYears(), "Updated experience should be permanently saved.");
-        assertEquals("999|Flinders St|Melbourne|VIC|Australia", freshlyRetrieved.get().getAddress(), "Updated address should be permanently saved.");
+        assertEquals("999|FlindersSt|Melbourne|VIC|Australia", freshlyRetrieved.get().getAddress(), "Updated address should be permanently saved.");
     }
 
     @Test
