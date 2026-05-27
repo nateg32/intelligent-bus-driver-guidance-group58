@@ -41,13 +41,15 @@ public class DriverRepository {
         String[] tokens = line.split("\\|", 6);
         if (tokens.length < 6) return Optional.empty();
 
-        Driver driver = new Driver();
-        driver.setDriverID(tokens[0].trim());
-        driver.setName(tokens[1].trim());
-        driver.setExperienceYears(Integer.parseInt(tokens[2].trim()));
-        driver.setLicenseType(tokens[3].trim());
-        driver.setAddress(tokens[4].trim());
-        driver.setBirthdate(tokens[5].trim());
+        // Instantiates the record using the team's parameterized constructor
+        Driver driver = new Driver(
+            tokens[0].trim(),
+            tokens[1].trim(),
+            Integer.parseInt(tokens[2].trim()),
+            tokens[3].trim(),
+            tokens[4].trim(),
+            tokens[5].trim()
+        );
         return Optional.of(driver);
     }
 
@@ -87,13 +89,15 @@ public class DriverRepository {
     public boolean add(Driver driver) {
         if (driver == null || driver.getDriverID() == null) return false;
         
-        DriverValidator.validateDriver(driver);
+        // Verifies the field validations match the DriverValidator criteria
+        if (!DriverValidator.isValidDriver(driver)) {
+            return false;
+        }
 
         List<Driver> drivers = getAllDrivers();
-        for (Driver d : drivers) {
-            if (d.getDriverID().equalsIgnoreCase(driver.getDriverID())) {
-                throw new IllegalArgumentException("Duplicate driver IDs are not allowed.");
-            }
+        // Uses the team's custom verification rule for ID uniqueness
+        if (!DriverValidator.isUniqueDriverID(driver.getDriverID(), drivers)) {
+            return false;
         }
 
         try (PrintWriter pw = new PrintWriter(new FileWriter(filePath.toFile(), true))) {
@@ -132,22 +136,10 @@ public class DriverRepository {
             return false;
         }
 
-        // D5: Immutable Field Validations
-        if (!existingDriver.getDriverID().equals(updatedDriver.getDriverID())) {
-            throw new IllegalArgumentException("The driverID cannot be modified during update operations.");
+        // Delegates the update constraint assertions to the completed canUpdateDriver method
+        if (!DriverValidator.canUpdateDriver(existingDriver, updatedDriver)) {
+            return false;
         }
-        if (!existingDriver.getName().equals(updatedDriver.getName())) {
-            throw new IllegalArgumentException("The name cannot be modified during update operations.");
-        }
-
-        // D4: License Update Restriction Validation
-        if (existingDriver.getExperienceYears() > 10) {
-            if (!existingDriver.getLicenseType().equals(updatedDriver.getLicenseType())) {
-                throw new IllegalArgumentException("License type cannot be changed during updates if experience exceeds 10 years.");
-            }
-        }
-
-        DriverValidator.validateDriver(updatedDriver);
 
         drivers.set(targetIndex, updatedDriver);
         writeAllDrivers(drivers);
@@ -158,7 +150,4 @@ public class DriverRepository {
         return getAllDrivers().size();
     }
 
-    public Path getFilePath() {
-        return filePath;
-    }
 }
