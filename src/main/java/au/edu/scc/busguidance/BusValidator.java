@@ -1,33 +1,47 @@
 package au.edu.scc.busguidance;
 
 import java.util.Collection;
+import java.util.Objects;
+import java.util.Set;
 
 public final class BusValidator {
+    private static final Set<String> VALID_FUEL_TYPES = Set.of("Diesel", "Hybrid", "Electricity");
+
     private BusValidator() {
     }
 
     public static boolean isValidBusID(String busID) {
-        // Ibrahim TODO B1: implement unique, exactly 8 digits validation.
-        return false;
+        return busID != null && busID.matches("\\d{8}");
     }
 
     public static boolean isUniqueBusID(String busID, Collection<Bus> existingBuses) {
-        // Ibrahim TODO B1: reject duplicate bus IDs.
-        return false;
+        if (busID == null || existingBuses == null) {
+            return false;
+        }
+
+        return existingBuses.stream()
+                .filter(Objects::nonNull)
+                .noneMatch(bus -> busID.equals(bus.getBusID()));
     }
 
     public static boolean canUpdateCapacity(int currentCapacity, int updatedCapacity) {
-        // Ibrahim TODO B2: capacity may stay the same or decrease, but not increase.
-        return false;
+        return currentCapacity > 0 && updatedCapacity > 0 && updatedCapacity <= currentCapacity;
     }
 
     public static boolean isValidBus(Bus bus) {
-        // Ibrahim TODO: combine bus validation rules.
-        return false;
+        return bus != null
+                && isValidBusID(bus.getBusID())
+                && bus.getCapacity() > 0
+                && bus.getFuelLevel() >= 0
+                && bus.getFuelLevel() <= 100
+                && VALID_FUEL_TYPES.contains(bus.getFuelType());
     }
 
     public static boolean canUpdateBus(Bus currentBus, Bus updatedBus) {
-        // Ibrahim TODO B2: implement update validation.
-        return false;
+        return currentBus != null
+                && updatedBus != null
+                && Objects.equals(currentBus.getBusID(), updatedBus.getBusID())
+                && isValidBus(updatedBus)
+                && canUpdateCapacity(currentBus.getCapacity(), updatedBus.getCapacity());
     }
 }
