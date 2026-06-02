@@ -1,8 +1,8 @@
-# Intelligent Bus Driver Guidance System - Starter Template
+# Intelligent Bus Driver Guidance System
 
-This repository is a starter template for Software Assignment 2. It contains the Maven structure, required class files, required test files, placeholder documentation files, TXT data files, and GitHub Actions workflow file.
+Group 58 Java Maven project for Assignment 4.
 
-The actual implementation and tests still need to be completed by the team. Each teammate should work on their own branch and make visible commits under their own GitHub account.
+This repository contains the source code, tests, TXT data files, and GitHub Actions workflow for the Intelligent Bus Driver Guidance System. Written documentation such as the test case table, user stories, acceptance criteria, and statement of contributions is maintained in the shared Google Doc, not in this repository.
 
 ## Requirements
 
@@ -15,56 +15,53 @@ The actual implementation and tests still need to be completed by the team. Each
 mvn test
 ```
 
-The starter tests are disabled placeholders. As each teammate implements their section, they should replace the placeholder tests with real JUnit 5 tests.
-
-## Team Responsibilities
-
-| Team member | Main responsibility | Files/areas to work on |
-| --- | --- | --- |
-| Nathaniel | Project setup and driver validation | Complete `Driver.java`, `DriverValidator.java`, D1-D3 unit tests in `DriverUnitTest.java`, test case table rows for D1-D3, and 2 user stories |
-| Patrick Nguyen | Driver repository and driver update rules | Complete `DriverRepository.java`, TXT persistence for drivers, `add`, `retrieve`, `update`, `count`, D4-D5 unit tests, driver integration tests, related test case table rows, and 2 user stories |
-| Ibrahim Ibqal | Bus model, bus repository, and bus validation | Complete `Bus.java`, `BusValidator.java`, `BusRepository.java`, TXT persistence for buses, B1-B2 unit tests, bus integration tests, related test case table rows, and 2 user stories |
-| Batu | Driver-bus eligibility, CI, and video coordination | Complete `BusAssignmentValidator.java`, B3-B5 eligibility tests, GitHub Actions verification, final test run, video coordination notes, related test case table rows, and 2 user stories |
+All final code should pass locally and in GitHub Actions before submission.
 
 ## Team Workflow
 
-Each teammate should use their own branch:
+All team commits are made directly to `main`.
+
+Before committing:
 
 ```bash
-git checkout -b nathaniel-driver-validation
-git checkout -b patrick-driver-repository
-git checkout -b ibrahim-bus-repository
-git checkout -b batu-bus-eligibility-ci
-```
-
-After making changes:
-
-```bash
+git pull origin main
 mvn test
-git add .
-git commit -m "Describe your section"
-git push -u origin your-branch-name
+git status
 ```
 
-Then open a pull request into `main`.
+Then commit and push:
 
-## Assignment Deliverables To Complete
+```bash
+git add .
+git commit -m "Describe the completed task"
+git push origin main
+```
 
-- Java Maven project with JUnit 5
+## Team Responsibilities
+
+| Team member | Main responsibility | Files/areas |
+| --- | --- | --- |
+| Nathaniel | Driver model and D1-D3 driver validation | `Driver.java`, `DriverValidator.java`, D1-D3 tests in `DriverUnitTest.java` |
+| Patrick Nguyen | Driver repository and D4-D5 update rules | `DriverRepository.java`, D4-D5 tests, `DriverIntegrationTest.java` |
+| Ibrahim Ibqal | Bus model, bus repository, and B1-B2 validation | `Bus.java`, `BusValidator.java`, `BusRepository.java`, `BusIntegrationTest.java` |
+| Batu | Driver-bus eligibility, GitHub Actions, and video evidence | `BusAssignmentValidator.java`, B3-B5 tests, `.github/workflows/maven.yml`, final demo video |
+
+## Assignment Requirements
+
+- Maven-based Java project
+- JUnit 5 tests
+- Human-readable TXT or JSON storage
 - `Driver` and `Bus` model classes
 - `DriverRepository` and `BusRepository`
-- TXT file storage in `data/drivers.txt` and `data/buses.txt`
-- Driver validation rules D1-D5
+- Driver rules D1-D5
 - Bus and driver-bus eligibility rules B1-B5
 - At least 15 driver unit tests
 - At least 15 bus unit tests
 - At least 4 driver integration tests
 - At least 4 bus integration tests
-- Test case table in `docs/TestCaseTable.md`
-- 8 user stories and 24 acceptance criteria in `docs/UserStories.md`
-- GitHub Actions workflow in `.github/workflows/maven.yml`
-- Passing local tests and passing GitHub Actions tests
-- Demo video showing local tests, GitHub Actions, and commit history
+- GitHub Actions workflow that runs tests on push or pull request
+- Final video showing local tests, GitHub Actions tests, and commit history
+- Google Doc containing the test case table, user stories, acceptance criteria, and contribution documentation
 
 ## Project Structure
 
@@ -88,27 +85,26 @@ data/
   drivers.txt
   buses.txt
 
-docs/
-  TestCaseTable.md
-  UserStories.md
+.github/workflows/
+  maven.yml
 ```
 
-## TXT Formats
+## Data Format
 
-Drivers use:
+Drivers are stored in `data/drivers.txt`.
 
 ```text
 driverID;name;experienceYears;licenseType;address;birthdate
 ```
 
-Buses use:
+Buses are stored in `data/buses.txt`.
 
 ```text
 busID;capacity;fuelLevel;fuelType
 ```
 
-Addresses use the assignment format:
+Addresses follow the assignment format:
 
 ```text
-Street Number|Street Name|Suburb|State|Country
+Street Number|Street Name|City|State|Country
 ```
