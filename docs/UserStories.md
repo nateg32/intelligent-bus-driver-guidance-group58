@@ -40,21 +40,21 @@ As a TODO, I want TODO so that TODO.
 
 ## Ibrahim Ibqal
 
-### US05 - TODO
+### US05 - Validate Bus Identity
 
-As a TODO, I want TODO so that TODO.
+As a depot administrator, I want the system to validate bus IDs before saving bus records so that each bus can be uniquely and reliably identified.
 
-1. Given TODO, when TODO, then TODO.
-2. Given TODO, when TODO, then TODO.
-3. Given TODO, when TODO, then TODO.
+1. Given a bus ID is exactly 8 characters and all characters are digits, when it is validated, then the system accepts the bus ID.
+2. Given a bus ID is missing, too short, too long, contains letters, contains spaces, or contains special characters, when it is validated, then the system rejects the bus ID.
+3. Given a bus ID already exists in the current bus records, when uniqueness is checked, then the system rejects the duplicate ID.
 
-### US06 - TODO
+### US06 - Manage Bus Records
 
-As a TODO, I want TODO so that TODO.
+As a depot administrator, I want the system to store, retrieve, update, and count bus records in a human-readable TXT file so that bus data can be maintained without using a database system.
 
-1. Given TODO, when TODO, then TODO.
-2. Given TODO, when TODO, then TODO.
-3. Given TODO, when TODO, then TODO.
+1. Given a valid bus record is added, when the repository retrieves the bus by ID, then the stored bus details are returned from the TXT file.
+2. Given an invalid bus record or duplicate bus ID is added, when the repository validates the record, then the bus is rejected and the stored record count does not increase.
+3. Given an existing bus is updated with the same or lower capacity, when the repository saves the update, then the changed bus details are persisted; given the update increases capacity, then the update is rejected.
 
 ## Batu
 

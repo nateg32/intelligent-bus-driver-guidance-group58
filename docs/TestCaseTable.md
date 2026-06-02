@@ -52,15 +52,33 @@ Complete this table as each teammate writes their tests.
 
 | ID | Type | Rule | Test/action | Expected result | Status |
 | --- | --- | --- | --- | --- | --- |
-| BU01 | Unit | B1 | TODO: valid 8-digit bus ID | TODO | Not started |
-| BU02 | Unit | B1 | TODO: duplicate bus ID | TODO | Not started |
-| BU03 | Unit | B1 | TODO: bus ID with letters or wrong length | TODO | Not started |
-| BU04 | Unit | B2 | TODO: capacity decrease accepted | TODO | Not started |
-| BU05 | Unit | B2 | TODO: capacity increase rejected | TODO | Not started |
-| BI01 | Integration | Repository | TODO: add and retrieve valid bus from TXT file | TODO | Not started |
-| BI02 | Integration | Repository | TODO: invalid bus is rejected | TODO | Not started |
-| BI03 | Integration | Repository | TODO: update persists to TXT file | TODO | Not started |
-| BI04 | Integration | Repository | TODO: count returns correct bus total | TODO | Not started |
+| BU01 | Unit | B1 | Validate `12345678` | Bus ID is accepted | Complete |
+| BU02 | Unit | B1 | Validate null bus ID | Bus ID is rejected | Complete |
+| BU03 | Unit | B1 | Validate bus ID shorter than 8 characters | Bus ID is rejected | Complete |
+| BU04 | Unit | B1 | Validate bus ID longer than 8 characters | Bus ID is rejected | Complete |
+| BU05 | Unit | B1 | Validate bus ID containing letters | Bus ID is rejected | Complete |
+| BU06 | Unit | B1 | Validate bus ID containing special characters | Bus ID is rejected | Complete |
+| BU07 | Unit | B1 | Validate bus ID containing spaces | Bus ID is rejected | Complete |
+| BU08 | Unit | B1 | Check a new bus ID against existing bus records | Bus ID is unique | Complete |
+| BU09 | Unit | B1 | Check a duplicate bus ID against existing bus records | Bus ID is not unique | Complete |
+| BU10 | Unit | B1 | Check null bus ID against existing bus records | Bus ID is not unique | Complete |
+| BU11 | Unit | B1 | Check bus ID against null existing bus list | Bus ID is not unique | Complete |
+| BU12 | Unit | B2 | Decrease capacity from 60 to 45 | Capacity update is accepted | Complete |
+| BU13 | Unit | B2 | Keep capacity unchanged at 45 | Capacity update is accepted | Complete |
+| BU14 | Unit | B2 | Increase capacity from 45 to 60 | Capacity update is rejected | Complete |
+| BU15 | Unit | B2 | Update capacity to 0 | Capacity update is rejected | Complete |
+| BU16 | Unit | B2 | Update capacity to a negative number | Capacity update is rejected | Complete |
+| BU17 | Unit | Bus record | Validate complete bus record | Bus record is accepted | Complete |
+| BU18 | Unit | Bus record | Validate bus record with invalid ID | Bus record is rejected | Complete |
+| BU19 | Unit | Bus record | Validate bus record with invalid capacity | Bus record is rejected | Complete |
+| BU20 | Unit | Bus record | Validate bus record with invalid fuel level | Bus record is rejected | Complete |
+| BU21 | Unit | Bus record | Validate bus record with invalid fuel type | Bus record is rejected | Complete |
+| BI01 | Integration | Repository | Add and retrieve valid bus from TXT file | Bus is stored and retrieved correctly | Complete |
+| BI02 | Integration | Repository | Add invalid bus with invalid bus ID | Bus is rejected and count remains 0 | Complete |
+| BI03 | Integration | Repository | Update bus with decreased capacity, fuel level, and fuel type | Updated values are persisted to TXT file | Complete |
+| BI04 | Integration | Repository | Add two valid buses | Count returns 2 | Complete |
+| BI05 | Integration | Repository | Add duplicate bus ID | Duplicate bus is rejected and count remains 1 | Complete |
+| BI06 | Integration | Repository | Attempt to increase bus capacity during update | Update is rejected and original capacity remains stored | Complete |
 
 ## Batu - Driver-Bus Eligibility Tests B3-B5
 
