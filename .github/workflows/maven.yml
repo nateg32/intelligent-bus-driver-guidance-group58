@@ -1,6 +1,5 @@
 name: Maven Tests
 
-
 # It should run on every push and pull request.
 on:
   push:
