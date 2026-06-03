@@ -1,20 +1,48 @@
 package au.edu.scc.busguidance;
 
 import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
 
 public final class BusAssignmentValidator {
+    private static final DateTimeFormatter BIRTHDATE_FORMATTER = DateTimeFormatter.ofPattern("dd-MM-uuuu");
+
     private BusAssignmentValidator() {
     }
 
     public static boolean canDriverOperateBus(Driver driver, Bus bus) {
-        // Batu TODO B3-B5: implement eligibility using today's date.
-        return false;
+        return canDriverOperateBus(driver, bus, LocalDate.now());
     }
 
     public static boolean canDriverOperateBus(Driver driver, Bus bus, LocalDate date) {
-        // Batu TODO B3: drivers older than 50 cannot drive buses with capacity 50 or more.
-        // Batu TODO B4: electric buses require at least 5 years of driver experience.
-        // Batu TODO B5: electric/hybrid buses require Heavy or PublicTransport licence.
-        return false;
+        if (driver == null || bus == null || date == null) {
+            return false;
+        }
+
+        LocalDate birthdate;
+        try {
+            birthdate = LocalDate.parse(driver.getBirthdate(), BIRTHDATE_FORMATTER);
+        } catch (Exception exception) {
+            return false;
+        }
+
+        int age = Period.between(birthdate, date).getYears();
+        String fuelType = bus.getFuelType();
+        String licenseType = driver.getLicenseType();
+
+        if (age > 50 && bus.getCapacity() >= 50) {
+            return false;
+        }
+
+        if ("Electricity".equals(fuelType) && driver.getExperienceYears() < 5) {
+            return false;
+        }
+
+        if ("Electricity".equals(fuelType) || "Hybrid".equals(fuelType)) {
+            String normalizedLicenseType = licenseType == null ? "" : licenseType.replace(" ", "");
+            return "Heavy".equals(normalizedLicenseType) || "PublicTransport".equals(normalizedLicenseType);
+        }
+
+        return true;
     }
 }

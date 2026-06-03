@@ -1,12 +1,12 @@
 package au.edu.scc.busguidance;
 
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
-
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 
 class BusUnitTest {
     @Nested
@@ -130,6 +130,137 @@ class BusUnitTest {
         void busRecordWithInvalidFuelTypeIsRejected() {
             assertFalse(BusValidator.isValidBus(bus("12345678", 45, 80.0, "Petrol")));
         }
+    }
+
+        @Nested
+    class DriverAgeRestrictionTests {
+        @Test
+        void driverOlderThanFiftyCannotDriveBusWithCapacityFifty() {
+            Driver driver = driver("34@@@@@@AB", 10, "Heavy", "01-01-1970");
+            Bus bus = bus("12345678", 50, 80.0, "Diesel");
+
+            assertFalse(BusAssignmentValidator.canDriverOperateBus(driver, bus, LocalDate.of(2026, 1, 1)));
+        }
+
+        @Test
+        void driverOlderThanFiftyCannotDriveBusWithCapacityAboveFifty() {
+            Driver driver = driver("34@@@@@@AB", 10, "Heavy", "01-01-1970");
+            Bus bus = bus("12345678", 60, 80.0, "Diesel");
+
+            assertFalse(BusAssignmentValidator.canDriverOperateBus(driver, bus, LocalDate.of(2026, 1, 1)));
+        }
+
+        @Test
+        void driverExactlyFiftyCanDriveBusWithCapacityFifty() {
+            Driver driver = driver("34@@@@@@AB", 10, "Heavy", "01-01-1976");
+            Bus bus = bus("12345678", 50, 80.0, "Diesel");
+
+            assertTrue(BusAssignmentValidator.canDriverOperateBus(driver, bus, LocalDate.of(2026, 1, 1)));
+        }
+
+        @Test
+        void driverOlderThanFiftyCanDriveBusWithCapacityBelowFifty() {
+            Driver driver = driver("34@@@@@@AB", 10, "Heavy", "01-01-1970");
+            Bus bus = bus("12345678", 49, 80.0, "Diesel");
+
+            assertTrue(BusAssignmentValidator.canDriverOperateBus(driver, bus, LocalDate.of(2026, 1, 1)));
+        }
+    }
+
+    @Nested
+    class ElectricBusExperienceRestrictionTests {
+        @Test
+        void electricBusRejectsDriverWithLessThanFiveYearsExperience() {
+            Driver driver = driver("34@@@@@@AB", 4, "Heavy", "01-01-1990");
+            Bus bus = bus("12345678", 40, 80.0, "Electricity");
+
+            assertFalse(BusAssignmentValidator.canDriverOperateBus(driver, bus, LocalDate.of(2026, 1, 1)));
+        }
+
+        @Test
+        void electricBusAcceptsDriverWithExactlyFiveYearsExperience() {
+            Driver driver = driver("34@@@@@@AB", 5, "Heavy", "01-01-1990");
+            Bus bus = bus("12345678", 40, 80.0, "Electricity");
+
+            assertTrue(BusAssignmentValidator.canDriverOperateBus(driver, bus, LocalDate.of(2026, 1, 1)));
+        }
+
+        @Test
+        void electricBusAcceptsDriverWithMoreThanFiveYearsExperience() {
+            Driver driver = driver("34@@@@@@AB", 6, "Heavy", "01-01-1990");
+            Bus bus = bus("12345678", 40, 80.0, "Electricity");
+
+            assertTrue(BusAssignmentValidator.canDriverOperateBus(driver, bus, LocalDate.of(2026, 1, 1)));
+        }
+
+        @Test
+        void dieselBusDoesNotUseElectricExperienceRule() {
+            Driver driver = driver("34@@@@@@AB", 0, "Light", "01-01-1990");
+            Bus bus = bus("12345678", 40, 80.0, "Diesel");
+
+            assertTrue(BusAssignmentValidator.canDriverOperateBus(driver, bus, LocalDate.of(2026, 1, 1)));
+        }
+    }
+
+    @Nested
+    class DriverLicenceRestrictionTests {
+        @Test
+        void heavyLicenceCanOperateElectricBus() {
+            Driver driver = driver("34@@@@@@AB", 5, "Heavy", "01-01-1990");
+            Bus bus = bus("12345678", 40, 80.0, "Electricity");
+
+            assertTrue(BusAssignmentValidator.canDriverOperateBus(driver, bus, LocalDate.of(2026, 1, 1)));
+        }
+
+        @Test
+        void heavyLicenceCanOperateHybridBus() {
+            Driver driver = driver("34@@@@@@AB", 5, "Heavy", "01-01-1990");
+            Bus bus = bus("12345678", 40, 80.0, "Hybrid");
+
+            assertTrue(BusAssignmentValidator.canDriverOperateBus(driver, bus, LocalDate.of(2026, 1, 1)));
+        }
+
+        @Test
+        void publicTransportLicenceCanOperateElectricBus() {
+            Driver driver = driver("34@@@@@@AB", 5, "PublicTransport", "01-01-1990");
+            Bus bus = bus("12345678", 40, 80.0, "Electricity");
+
+            assertTrue(BusAssignmentValidator.canDriverOperateBus(driver, bus, LocalDate.of(2026, 1, 1)));
+        }
+
+        @Test
+        void publicTransportLicenceCanOperateHybridBus() {
+            Driver driver = driver("34@@@@@@AB", 5, "PublicTransport", "01-01-1990");
+            Bus bus = bus("12345678", 40, 80.0, "Hybrid");
+
+            assertTrue(BusAssignmentValidator.canDriverOperateBus(driver, bus, LocalDate.of(2026, 1, 1)));
+        }
+
+        @Test
+        void lightLicenceCannotOperateElectricBus() {
+            Driver driver = driver("34@@@@@@AB", 5, "Light", "01-01-1990");
+            Bus bus = bus("12345678", 40, 80.0, "Electricity");
+
+            assertFalse(BusAssignmentValidator.canDriverOperateBus(driver, bus, LocalDate.of(2026, 1, 1)));
+        }
+
+        @Test
+        void mediumLicenceCannotOperateHybridBus() {
+            Driver driver = driver("34@@@@@@AB", 5, "Medium", "01-01-1990");
+            Bus bus = bus("12345678", 40, 80.0, "Hybrid");
+
+            assertFalse(BusAssignmentValidator.canDriverOperateBus(driver, bus, LocalDate.of(2026, 1, 1)));
+        }
+    }
+
+    private Driver driver(String driverID, int experienceYears, String licenseType, String birthdate) {
+        return new Driver(
+                driverID,
+                "Batu",
+                experienceYears,
+                licenseType,
+                "12|King Street|Melbourne|VIC|Australia",
+                birthdate);
     }
 
     private Bus bus(String busID, int capacity, double fuelLevel, String fuelType) {
